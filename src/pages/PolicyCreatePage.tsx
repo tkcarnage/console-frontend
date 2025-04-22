@@ -55,7 +55,7 @@ export default function PolicyCreatePage() {
     };
 
     loadApps();
-  });
+  }, []);
 
   const handleSubmit = async (policyData: Policy) => {
     setSubmitting(true);

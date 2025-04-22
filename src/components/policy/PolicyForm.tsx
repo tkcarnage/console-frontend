@@ -327,15 +327,13 @@ export default function PolicyForm({
         useAppOwnerAsReviewer,
         provisioningSteps,
         revocationSteps,
-        visibleGroups: policyVisibility === "specific" ? selectedGroups.filter(g => Boolean(g.id && g.name)) : undefined,
-        visibleUsers: policyVisibility === "specific"
+        visibleGroupIds: policyVisibility === "specific" ? selectedGroups.filter(g => Boolean(g.id)).map(g => g.id) : undefined,
+        visibleUserIds: policyVisibility === "specific"
           ? selectedUsers
-              .filter(u => Boolean(u.id && u.email && u.firstName && u.lastName))
+              .filter(u => Boolean(u.id))
+              .map(u => u.id)
           : undefined,
-        reviewers: selectedReviewerIds.map(id => {
-          const reviewer = allUsers.find(u => u.id === id);
-          return reviewer || { id };
-        }) as User[],
+        reviewerIds: selectedReviewerIds,
         approvalSteps: approvalSteps.map(step => ({
           id: step.id,
           type: step.type,

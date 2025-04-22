@@ -200,8 +200,16 @@ export default function PolicyDetailsSection({
         <h2 className="text-2xl font-bold mb-1">Access length <span className="text-red-500">*</span></h2>
         <p className="text-muted-foreground mb-3">How long should users have access?</p>
         <Select 
-          value={accessLength}
-          onValueChange={(value) => !readOnly && setAccessLength(value)}
+          value={accessLength.startsWith('FIXED_') && accessLength !== 'FIXED_CUSTOM' ? 'FIXED_DURATION' : accessLength}
+          onValueChange={(value) => {
+            if (!readOnly) {
+              if (value === 'FIXED_DURATION') {
+                setAccessLength('FIXED_WEEK'); // Default to week when selecting fixed duration
+              } else {
+                setAccessLength(value);
+              }
+            }
+          }}
           disabled={readOnly}
         >
           <SelectTrigger className="w-full max-w-md">
@@ -209,11 +217,32 @@ export default function PolicyDetailsSection({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="INDEFINITE">Indefinite</SelectItem>
-            <SelectItem value="FIXED">Fixed duration</SelectItem>
+            <SelectItem value="FIXED_DURATION">Fixed duration</SelectItem>
+            <SelectItem value="FIXED_CUSTOM">Custom duration</SelectItem>
           </SelectContent>
         </Select>
 
-        {accessLength === "FIXED" && (
+        {accessLength.startsWith('FIXED_') && accessLength !== 'FIXED_CUSTOM' && (
+          <div className="mt-4">
+            <Label>Duration</Label>
+            <Select 
+              value={accessLength}
+              onValueChange={(value) => !readOnly && setAccessLength(value)}
+              disabled={readOnly}
+            >
+              <SelectTrigger className="w-full max-w-md">
+                <SelectValue placeholder="Select duration" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="FIXED_WEEK">1 Week (7 days)</SelectItem>
+                <SelectItem value="FIXED_MONTH">1 Month (30 days)</SelectItem>
+                <SelectItem value="FIXED_YEAR">1 Year (365 days)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+
+        {accessLength === "FIXED_CUSTOM" && (
           <div className="mt-4 flex items-end gap-2 max-w-md">
             <div className="w-full">
               <Label htmlFor="duration-days">Number of days</Label>

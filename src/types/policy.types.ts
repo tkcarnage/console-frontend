@@ -1,4 +1,9 @@
-export type AccessDurationType = "FIXED" | "INDEFINITE";
+export type AccessDurationType =
+  | "FIXED_WEEK"
+  | "FIXED_MONTH"
+  | "FIXED_YEAR"
+  | "FIXED_CUSTOM"
+  | "INDEFINITE";
 
 export interface User {
   id: string;

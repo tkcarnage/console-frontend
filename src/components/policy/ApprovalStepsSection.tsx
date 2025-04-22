@@ -39,13 +39,15 @@ export default function ApprovalStepsSection({
   readOnly = false,
 }: ApprovalStepsSectionProps) {
 
-  // Handler for multi-select user changes (example using simple select for now)
-  // In a real multi-select, this would update the selectedUserIds array
-  const handleUserSelectionChange = (stepIndex: number, userId: string) => {
+  // Handler to toggle user selection for a specific step
+  const handleToggleUserForStep = (stepIndex: number, userId: string) => {
     if (readOnly) return;
-    // For a single select example:
-    handleUpdateApprovalStepUsers(stepIndex, [userId]); 
-    // For multi-select: you would toggle the userId in the existing array
+    const currentStep = approvalSteps[stepIndex];
+    const currentSelectedIds = currentStep.selectedUserIds || [];
+    const newSelectedIds = currentSelectedIds.includes(userId)
+      ? currentSelectedIds.filter(id => id !== userId)
+      : [...currentSelectedIds, userId];
+    handleUpdateApprovalStepUsers(stepIndex, newSelectedIds);
   };
 
   return (
@@ -145,29 +147,34 @@ export default function ApprovalStepsSection({
                          No reviewers available in the policy reviewer list.
                       </div>
                     ) : (
-                      // --- User Selection Dropdown (Example: Single Select) ---
-                      // Replace with a proper multi-select component if needed
-                      <Select
-                        // For multi-select, value would be an array step.selectedUserIds
-                        value={step.selectedUserIds?.[0] || ''} // Example for single select
-                        onValueChange={(userId) => handleUserSelectionChange(index, userId)}
-                        disabled={readOnly}
-                      >
-                        <SelectTrigger id={`specificUsers-${step.id || index}`} className="w-full">
-                          <SelectValue placeholder="Select user(s)..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {availableReviewers.map(user => (
-                            <SelectItem key={user.id} value={user.id}>
-                              <div className="flex items-center gap-2">
-                                {/* Optional: User avatar/initials */}
-                                <span>{user.firstName} {user.lastName} ({user.email})</span>
-                              </div>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      // --- End User Selection Dropdown --- 
+                      // --- Simpler User Selection using Checkboxes --- 
+                      <div className="space-y-2 p-3 border rounded-md max-h-48 overflow-y-auto">
+                        {availableReviewers.map(reviewer => (
+                          <div key={reviewer.id} className="flex items-center space-x-2">
+                            <Checkbox
+                              id={`step-${step.id || index}-user-${reviewer.id}`}
+                              checked={step.selectedUserIds?.includes(reviewer.id)}
+                              onCheckedChange={() => handleToggleUserForStep(index, reviewer.id)}
+                              disabled={readOnly}
+                            />
+                            <Label 
+                              htmlFor={`step-${step.id || index}-user-${reviewer.id}`}
+                              className={`flex items-center gap-2 text-sm flex-grow ${readOnly ? 'cursor-default' : 'cursor-pointer'}`}
+                            >
+                               {/* Optional: Avatar/Initials */}
+                               <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium shrink-0">
+                                 {reviewer.firstName?.charAt(0).toUpperCase()}
+                                 {reviewer.lastName?.charAt(0).toUpperCase()}
+                               </div>
+                               <div className="flex flex-col min-w-0">
+                                 <span className="font-normal truncate">{reviewer.firstName} {reviewer.lastName}</span>
+                                 <span className="text-xs text-muted-foreground truncate">{reviewer.email}</span>
+                               </div>
+                            </Label>
+                          </div>
+                        ))}
+                      </div>
+                      // --- End Simpler User Selection --- 
                     )}
                     {/* Display selected users nicely (especially for multi-select) */} 
                     {/* <div className="mt-2 flex flex-wrap gap-1">

@@ -311,6 +311,14 @@ export default function PolicyForm({
         throw new Error('Please provide a valid number of days for fixed access');
       }
 
+      // Format approval steps
+      const formattedApprovalSteps: ApprovalStep[] = approvalSteps.map(step => ({
+        id: step.id,
+        type: step.type,
+        escalate: step.escalate,
+        userIds: step.type === 'specific' ? (step.selectedUserIds || []) : undefined,
+      }));
+
       // Prepare policy data
       const policyData: Policy = {
         ...(initialData as Policy),
@@ -325,7 +333,8 @@ export default function PolicyForm({
             ? accessDurationDays 
             : undefined,
         useAppOwnerAsReviewer,
-        provisioningSteps,
+        approvalSteps: formattedApprovalSteps,
+        provisioningSteps: provisioningSteps,
         revocationSteps,
         visibleGroupIds: policyVisibility === "specific" ? selectedGroups.filter(g => Boolean(g.id)).map(g => g.id) : undefined,
         visibleUserIds: policyVisibility === "specific"
@@ -334,12 +343,6 @@ export default function PolicyForm({
               .map(u => u.id)
           : undefined,
         reviewerIds: selectedReviewerIds,
-        approvalSteps: approvalSteps.map(step => ({
-          id: step.id,
-          type: step.type,
-          escalate: step.escalate,
-          userIds: step.type === 'specific' ? (step.selectedUserIds || []) : undefined, 
-        })),
         app: apps.find(app => app.id === selectedAppId) || { id: selectedAppId, name: "Unknown App" }
       };
 

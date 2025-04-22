@@ -70,6 +70,8 @@ export interface Policy {
   visibleToEveryone: boolean;
   visibleGroups?: Group[];
   visibleUsers?: User[];
+  visibleGroupIds?: string[];
+  visibleUserIds?: string[];
   accessDurationType: AccessDurationType;
   accessDurationDays?: number;
   useAppOwnerAsReviewer: boolean;
@@ -77,6 +79,7 @@ export interface Policy {
   provisioningSteps?: ProvisioningStep[];
   revocationSteps?: RevocationStep[];
   reviewers?: User[];
+  reviewerIds?: string[];
   createdAt?: string;
   updatedAt?: string;
   deletedAt?: string;

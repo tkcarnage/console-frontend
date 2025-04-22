@@ -36,9 +36,13 @@ export interface App {
 
 export interface ApprovalStep {
   id: string;
-  type: "app_owner" | "specific";
-  escalate: boolean;
+  type: string;
+  escalate?: boolean;
   userIds?: string[];
+  target?: string;
+  provider?: string;
+  description?: string;
+  parameters?: Record<string, unknown>;
 }
 
 export interface ProvisioningStep {

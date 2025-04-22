@@ -204,8 +204,8 @@ export default function PolicyDetailsSection({
           onValueChange={(value) => {
             if (!readOnly) {
               if (value === 'FIXED_DURATION') {
-                setAccessLength('FIXED_WEEK'); // Default to week when selecting fixed duration
-              } else {
+                setAccessLength('FIXED_WEEK');
+              } else if (value === 'INDEFINITE' || value === 'FIXED_CUSTOM') {
                 setAccessLength(value);
               }
             }

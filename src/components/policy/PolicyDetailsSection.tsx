@@ -2,7 +2,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Plus, Trash, Loader2 } from "lucide-react";
 import { User, Group } from "../../types/policy.types";
 
@@ -17,12 +16,6 @@ interface PolicyDetailsSectionProps {
   setAccessLength: (value: string) => void;
   accessDurationDays: number;
   setAccessDurationDays: (value: number) => void;
-  requireReason: boolean;
-  setRequireReason: (value: boolean) => void;
-  minDays: number;
-  setMinDays: (value: number) => void;
-  maxDays: number;
-  setMaxDays: (value: number) => void;
   selectedGroups: Group[];
   selectedUsers: User[];
   allGroups: Group[];
@@ -44,12 +37,6 @@ export default function PolicyDetailsSection({
   setAccessLength,
   accessDurationDays,
   setAccessDurationDays,
-  requireReason,
-  setRequireReason,
-  minDays,
-  setMinDays,
-  maxDays,
-  setMaxDays,
   selectedGroups,
   selectedUsers,
   allGroups,
@@ -223,7 +210,6 @@ export default function PolicyDetailsSection({
           <SelectContent>
             <SelectItem value="INDEFINITE">Indefinite</SelectItem>
             <SelectItem value="FIXED">Fixed duration</SelectItem>
-            <SelectItem value="USER_REQUESTED">User requested</SelectItem>
           </SelectContent>
         </Select>
 
@@ -240,52 +226,6 @@ export default function PolicyDetailsSection({
                 disabled={readOnly}
                 readOnly={readOnly}
               />
-            </div>
-          </div>
-        )}
-
-        {accessLength === "USER_REQUESTED" && (
-          <div className="mt-4 space-y-4 max-w-md">
-            <div className="space-y-2">
-              <h3 className="text-lg font-medium">Access Request Settings</h3>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="min-days">Minimum days</Label>
-                  <Input 
-                    id="min-days" 
-                    type="number" 
-                    value={minDays}
-                    onChange={(e) => !readOnly && setMinDays(parseInt(e.target.value) || 1)}
-                    min="1"
-                    disabled={readOnly}
-                    readOnly={readOnly}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="max-days">Maximum days</Label>
-                  <Input 
-                    id="max-days" 
-                    type="number"
-                    value={maxDays}
-                    onChange={(e) => !readOnly && setMaxDays(parseInt(e.target.value) || 90)}
-                    min="1"
-                    disabled={readOnly}
-                    readOnly={readOnly}
-                  />
-                </div>
-                <div className="flex items-start gap-2">
-                  <Checkbox 
-                    id="require-reason" 
-                    checked={requireReason}
-                    onCheckedChange={(checked) => !readOnly && setRequireReason(checked === true)}
-                    disabled={readOnly}
-                  />
-                  <div>
-                    <Label htmlFor="require-reason">Require reason</Label>
-                    <p className="text-sm text-muted-foreground">Users must provide a reason for requesting access</p>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         )}

@@ -19,8 +19,6 @@ const generateUniqueId = (): string => {
   return Math.random().toString(36).substring(2, 15) + 
          Math.random().toString(36).substring(2, 15);
 };
-
-// Extend ApprovalStep type locally if needed to handle UI state like selected user IDs
 interface ApprovalStepUI extends ApprovalStep {
   selectedUserIds?: string[]; 
 }
@@ -41,18 +39,6 @@ interface PolicyFormProps {
   readOnly?: boolean;
 }
 
-// Helper to adapt initial visibleUser data to User type
-const adaptVisibleUser = (visibleUser: { id: string; name?: string; email: string }): User => {
-  // Attempt to split name into first/last, fallback if needed
-  const nameParts = visibleUser.name?.split(' ') || [];
-  return {
-    id: visibleUser.id,
-    email: visibleUser.email,
-    firstName: nameParts[0] || '' , // Provide default empty string
-    lastName: nameParts.slice(1).join(' ') || '' // Provide default empty string
-  };
-};
-
 export default function PolicyForm({ 
   apps, 
   loading: initialLoading,
@@ -72,15 +58,12 @@ export default function PolicyForm({
   const [policyVisibility, setPolicyVisibility] = useState<string>(initialData?.visibleToEveryone ? "everyone" : "specific");
   const [accessLength, setAccessLength] = useState<string>(initialData?.accessDurationType || "INDEFINITE");
   const [accessDurationDays, setAccessDurationDays] = useState<number>(initialData?.accessDurationDays || 30);
-  const [requireReason, setRequireReason] = useState<boolean>(initialData?.requireReason || false);
-  const [minDays, setMinDays] = useState<number>(initialData?.minDays || 1);
-  const [maxDays, setMaxDays] = useState<number>(initialData?.maxDays || 90);
   const [useAppOwnerAsReviewer, setUseAppOwnerAsReviewer] = useState<boolean>(
     initialData?.useAppOwnerAsReviewer !== undefined ? initialData.useAppOwnerAsReviewer : true
   );
   const [selectedGroups, setSelectedGroups] = useState<Group[]>(initialData?.visibleGroups || []);
   const [selectedUsers, setSelectedUsers] = useState<User[]>(
-    initialData?.visibleUsers?.map(adaptVisibleUser) || []
+    initialData?.visibleUsers || []
   );
   const [provisioningSteps, setProvisioningSteps] = useState<ProvisioningStep[]>(
     initialData?.provisioningSteps || [
@@ -342,22 +325,17 @@ export default function PolicyForm({
             ? accessDurationDays 
             : undefined,
         useAppOwnerAsReviewer,
-        requireReason: accessLength === "USER_REQUESTED" ? requireReason : undefined,
-        minDays: accessLength === "USER_REQUESTED" ? minDays : undefined,
-        maxDays: accessLength === "USER_REQUESTED" ? maxDays : undefined,
         provisioningSteps,
         revocationSteps,
         visibleGroups: policyVisibility === "specific" ? selectedGroups.filter(g => Boolean(g.id && g.name)) : undefined,
         visibleUsers: policyVisibility === "specific"
           ? selectedUsers
-              .filter(u => Boolean(u.id && u.email))
-              .map(u => ({
-                id: u.id,
-                email: u.email,
-                name: `${u.firstName} ${u.lastName}`.trim()
-              }))
+              .filter(u => Boolean(u.id && u.email && u.firstName && u.lastName))
           : undefined,
-        reviewers: selectedReviewerIds.map(id => ({ id })) as User[],
+        reviewers: selectedReviewerIds.map(id => {
+          const reviewer = allUsers.find(u => u.id === id);
+          return reviewer || { id };
+        }) as User[],
         approvalSteps: approvalSteps.map(step => ({
           id: step.id,
           type: step.type,
@@ -454,20 +432,14 @@ export default function PolicyForm({
             setPolicyName={setPolicyName}
             policyDescription={policyDescription}
             setPolicyDescription={setPolicyDescription}
-            policyVisibility={policyVisibility}
-            setPolicyVisibility={setPolicyVisibility}
             accessLength={accessLength}
             setAccessLength={setAccessLength}
             accessDurationDays={accessDurationDays}
             setAccessDurationDays={setAccessDurationDays}
-            requireReason={requireReason}
-            setRequireReason={setRequireReason}
-            minDays={minDays}
-            setMinDays={setMinDays}
-            maxDays={maxDays}
-            setMaxDays={setMaxDays}
             selectedGroups={selectedGroups}
             selectedUsers={selectedUsers}
+            policyVisibility={policyVisibility}
+            setPolicyVisibility={setPolicyVisibility}
             allGroups={allGroups}
             allUsers={allUsers}
             loadingResources={loadingResources}

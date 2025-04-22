@@ -19,7 +19,6 @@ export default function PolicyDetailPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Load data
   useEffect(() => {
     const loadData = async () => {
       try {

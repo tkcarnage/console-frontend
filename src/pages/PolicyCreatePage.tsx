@@ -12,25 +12,6 @@ export default function PolicyCreatePage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
-  // Sample apps for fallback
-  const sampleApps = [
-    {
-      id: "app-1",
-      name: "Zoom",
-      logo: "https://cdn-icons-png.flaticon.com/512/4401/4401470.png",
-    },
-    {
-      id: "app-2",
-      name: "Slack",
-      logo: "https://cdn-icons-png.flaticon.com/512/2111/2111615.png",
-    },
-    {
-      id: "app-3",
-      name: "Google Workspace",
-      logo: "https://cdn-icons-png.flaticon.com/512/2991/2991147.png",
-    }
-  ];
-
   // Load apps from backend
   useEffect(() => {
     const loadApps = async () => {
@@ -49,8 +30,7 @@ export default function PolicyCreatePage() {
           variant: "destructive"
         });
         
-        // Fallback to sample data if API call fails
-        setApps(sampleApps);
+        setApps([]);
       }
     };
 
@@ -62,16 +42,13 @@ export default function PolicyCreatePage() {
     setError(null);
 
     try {
-      // Call the createPolicy function from api.ts
       await createPolicy(policyData as PolicyCreateInput);
 
-      // Success notification
       toast({
         title: "Success",
         description: "Policy created successfully",
       });
 
-      // On success, navigate back to policy list, possibly to the new policy's detail page?
       navigate('/');
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'An error occurred';

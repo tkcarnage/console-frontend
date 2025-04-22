@@ -1,21 +1,37 @@
-export type AccessDurationType = "INDEFINITE" | "FIXED" | "USER_REQUESTED";
+export type AccessDurationType = "FIXED" | "INDEFINITE";
 
 export interface User {
   id: string;
   email: string;
   firstName: string;
   lastName: string;
+  avatar?: string;
+  title?: string;
+  department?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }
 
 export interface Group {
   id: string;
   name: string;
+  description?: string;
+  note?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
 }
 
 export interface App {
   id: string;
   name: string;
-  logo: string;
+  url?: string;
+  logo?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+  ownerId?: string;
 }
 
 export interface ApprovalStep {
@@ -50,32 +66,20 @@ export interface Policy {
   name: string;
   description?: string;
   appId: string;
-  app: {
-    id: string;
-    name: string;
-    logo?: string;
-  };
+  app: App;
   visibleToEveryone: boolean;
-  visibleGroups?: Array<{ id: string; name: string }>;
-  visibleUsers?: Array<{ id: string; name: string; email: string }>;
-  requireReason?: boolean;
+  visibleGroups?: Group[];
+  visibleUsers?: User[];
   accessDurationType: AccessDurationType;
   accessDurationDays?: number;
-  minDays?: number;
-  maxDays?: number;
+  useAppOwnerAsReviewer: boolean;
   approvalSteps?: ApprovalStep[];
   provisioningSteps?: ProvisioningStep[];
   revocationSteps?: RevocationStep[];
-  reviewers?: Array<{
-    id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-  }>;
-  useAppOwnerAsReviewer?: boolean;
-  status?: string;
+  reviewers?: User[];
   createdAt?: string;
   updatedAt?: string;
+  deletedAt?: string;
 }
 
 export interface PolicyCreateInput {
@@ -83,22 +87,17 @@ export interface PolicyCreateInput {
   description?: string;
   appId: string;
   visibleToEveryone?: boolean;
-  visibleUserEmails?: string[];
+  visibleUserIds?: string[];
   visibleGroupIds?: string[];
   accessDurationType: AccessDurationType;
   accessDurationDays?: number;
-  reviewerEmails?: string[];
+  reviewerIds?: string[];
   useAppOwnerAsReviewer?: boolean;
   provisioningSteps?: ProvisioningStep[];
   revocationSteps?: RevocationStep[];
   approvalSteps?: ApprovalStep[];
-  requireReason?: boolean;
-  minDays?: number;
-  maxDays?: number;
 }
 
 export interface PolicyUpdateInput extends Partial<PolicyCreateInput> {
   id: string;
-  visibleGroupIds?: string[];
-  visibleUserIds?: string[];
 }

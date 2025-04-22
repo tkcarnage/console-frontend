@@ -1,28 +1,24 @@
-import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash, Loader2 } from "lucide-react";
-import { User, ApprovalStep } from '../../types/policy.types'; // Assuming ApprovalStep type exists
-
-// Extend ApprovalStep type locally if needed to handle UI state like selected user IDs
+import { User, ApprovalStep } from '../../types/policy.types';
 interface ApprovalStepUI extends ApprovalStep {
-  // Add any UI specific state if needed, e.g. selectedUserIds for multi-select
   selectedUserIds?: string[]; 
 }
 
 interface ApprovalStepsSectionProps {
   approvalSteps: ApprovalStepUI[];
-  availableReviewers: User[]; // Users who can be selected for steps
+  availableReviewers: User[];
   loadingReviewers: boolean;
   handleAddApprovalStep: (type: 'app_owner' | 'specific') => void;
   handleRemoveApprovalStep: (index: number) => void;
   handleUpdateApprovalStepType: (index: number, type: 'app_owner' | 'specific') => void;
   handleUpdateApprovalStepUsers: (index: number, userIds: string[]) => void;
   handleUpdateApprovalStepEscalate: (index: number, escalate: boolean) => void;
-  handleResetApprovalSteps: () => void; // Added reset handler prop
+  handleResetApprovalSteps: () => void;
   readOnly?: boolean;
 }
 
@@ -64,7 +60,7 @@ export default function ApprovalStepsSection({
                 type="button"
                 variant="outline" 
                 size="sm"
-                onClick={handleResetApprovalSteps} // Use the reset handler
+                onClick={handleResetApprovalSteps}
                 className="flex items-center gap-1"
                 title="Reset approval steps"
                 disabled={readOnly}
@@ -72,12 +68,11 @@ export default function ApprovalStepsSection({
                 <Trash className="h-4 w-4" /> Reset
               </Button>
             )}
-            {/* Simplified Add Button - could use a dropdown like before */}
             <Button 
               type="button"
               variant="outline" 
               size="sm"
-              onClick={() => handleAddApprovalStep('specific')} // Default add 'specific'
+              onClick={() => handleAddApprovalStep('specific')}
               className="flex items-center gap-1"
               title="Add new approval step"
               disabled={readOnly}
@@ -128,7 +123,6 @@ export default function ApprovalStepsSection({
                     <SelectContent>
                       <SelectItem value="app_owner">App Owner</SelectItem>
                       <SelectItem value="specific">Specific Users</SelectItem>
-                      {/* Add other types like 'manager' if applicable */}
                     </SelectContent>
                   </Select>
                 </div>
@@ -147,7 +141,6 @@ export default function ApprovalStepsSection({
                          No reviewers available in the policy reviewer list.
                       </div>
                     ) : (
-                      // --- Simpler User Selection using Checkboxes --- 
                       <div className="space-y-2 p-3 border rounded-md max-h-48 overflow-y-auto">
                         {availableReviewers.map(reviewer => (
                           <div key={reviewer.id} className="flex items-center space-x-2">
@@ -161,7 +154,6 @@ export default function ApprovalStepsSection({
                               htmlFor={`step-${step.id || index}-user-${reviewer.id}`}
                               className={`flex items-center gap-2 text-sm flex-grow ${readOnly ? 'cursor-default' : 'cursor-pointer'}`}
                             >
-                               {/* Optional: Avatar/Initials */}
                                <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center text-xs font-medium shrink-0">
                                  {reviewer.firstName?.charAt(0).toUpperCase()}
                                  {reviewer.lastName?.charAt(0).toUpperCase()}
@@ -174,12 +166,7 @@ export default function ApprovalStepsSection({
                           </div>
                         ))}
                       </div>
-                      // --- End Simpler User Selection --- 
                     )}
-                    {/* Display selected users nicely (especially for multi-select) */} 
-                    {/* <div className="mt-2 flex flex-wrap gap-1">
-                         {step.selectedUserIds?.map(id => <Badge key={id}>{allUsers.find(u=>u.id===id)?.name}</Badge>)}
-                       </div> */} 
                   </div>
                 )}
 

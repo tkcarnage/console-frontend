@@ -1,8 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode, Dispatch, SetStateAction } from 'react';
 import { fetchUsers, User } from '@/lib/api';
 
-// Re-introduce Admin Email Definition
-const ADMIN_EMAIL = "admin@example.com"; // Should match seed.ts
+const ADMIN_EMAIL = "admin@example.com";
 
 interface UserContextType {
   users: User[];
@@ -36,7 +35,7 @@ export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
       } catch (err) {
         console.error("Error fetching users for context:", err);
         setUserError("Failed to load users.");
-        setUsers([]); // Ensure users is empty on error
+        setUsers([]); 
       } finally {
         setLoadingUsers(false);
       }

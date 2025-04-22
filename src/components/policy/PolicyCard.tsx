@@ -6,12 +6,35 @@ import { Clock, Trash2, Eye } from 'lucide-react';
 
 interface PolicyCardProps {
   policy: Policy;
-  onDelete: (id: string) => void;
+  onClick?: () => void;
+  onDelete?: (id: string) => void;
 }
 
-export default function PolicyCard({ policy, onDelete }: PolicyCardProps) {
+export function PolicyCard({ policy, onClick, onDelete }: PolicyCardProps) {
+  const isFixedDuration = policy.accessDurationType.startsWith('FIXED_');
+  
+  let durationText = 'Indefinite access';
+  if (isFixedDuration) {
+    switch (policy.accessDurationType) {
+      case 'FIXED_WEEK':
+        durationText = '1 week access';
+        break;
+      case 'FIXED_MONTH':
+        durationText = '1 month access';
+        break;
+      case 'FIXED_YEAR':
+        durationText = '1 year access';
+        break;
+      default:
+        durationText = `${policy.accessDurationDays} days access`;
+    }
+  }
+
   return (
-    <Card className="overflow-hidden">
+    <Card
+      className="hover:bg-accent hover:cursor-pointer transition-colors"
+      onClick={onClick}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-center gap-2 mb-2">
           {policy.app.logo && (
@@ -23,13 +46,9 @@ export default function PolicyCard({ policy, onDelete }: PolicyCardProps) {
         <CardDescription>{policy.description}</CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
-        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
-          <span>
-            {policy.accessDurationType === 'FIXED' 
-              ? `Access for ${policy.accessDurationDays} days` 
-              : 'Indefinite access'}
-          </span>
+          <span>{durationText}</span>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between pt-2">
@@ -41,7 +60,10 @@ export default function PolicyCard({ policy, onDelete }: PolicyCardProps) {
         <Button 
           variant="destructive" 
           size="sm"
-          onClick={() => onDelete(policy.id)}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onDelete) onDelete(policy.id);
+          }}
         >
           <Trash2 className="w-4 h-4 mr-1" /> Delete
         </Button>

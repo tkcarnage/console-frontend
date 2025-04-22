@@ -17,25 +17,11 @@ const INTEGRATION_PROVIDERS = [
 
 // Mock data for different dropdown options based on step type
 const PROVISIONING_OPTIONS = {
-  'add_to_group': [
-    { value: 'sales', label: 'Sales' },
-    { value: 'engineering', label: 'Engineering' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'finance', label: 'Finance' },
-    { value: 'hr', label: 'Human Resources' }
-  ],
-  'add_permission': [
-    { value: 'read', label: 'Read Access' },
-    { value: 'write', label: 'Write Access' },
-    { value: 'admin', label: 'Admin Access' },
-    { value: 'channel_view', label: 'View Channels' },
-    { value: 'channel_post', label: 'Post in Channels' }
-  ],
-  'create_account': [
-    { value: 'regular', label: 'Regular Account' },
-    { value: 'restricted', label: 'Restricted Account' },
-    { value: 'temporary', label: 'Temporary Account (30 days)' },
-    { value: 'guest', label: 'Guest Account' }
+  'api_call': [
+    { value: 'add_team_member', label: 'Add Team Member' },
+    { value: 'invite_user', label: 'Invite User' },
+    { value: 'add_user', label: 'Add User' },
+    { value: 'create_user', label: 'Create User' }
   ]
 };
 
@@ -133,9 +119,7 @@ export default function ProvisioningStepsSection({
                         </div>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="add_to_group">Add to Group</SelectItem>
-                        <SelectItem value="add_permission">Add Permission</SelectItem>
-                        <SelectItem value="create_account">Create Account</SelectItem>
+                        <SelectItem value="api_call">API Call</SelectItem>
                       </SelectContent>
                     </Select>
                     

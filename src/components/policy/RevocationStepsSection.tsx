@@ -17,23 +17,11 @@ const INTEGRATION_PROVIDERS = [
 
 // Revocation options
 const REVOCATION_OPTIONS = {
-  'remove_from_group': [
-    { value: 'sales', label: 'Sales' },
-    { value: 'engineering', label: 'Engineering' },
-    { value: 'marketing', label: 'Marketing' },
-    { value: 'finance', label: 'Finance' },
-    { value: 'hr', label: 'Human Resources' }
-  ],
-  'remove_permission': [
-    { value: 'read', label: 'Read Access' },
-    { value: 'write', label: 'Write Access' },
-    { value: 'admin', label: 'Admin Access' },
-    { value: 'channel_view', label: 'View Channels' },
-    { value: 'channel_post', label: 'Post in Channels' }
-  ],
-  'disable_account': [
-    { value: 'temporary', label: 'Temporary Disable' },
-    { value: 'permanent', label: 'Permanent Disable' }
+  'api_call': [
+    { value: 'remove_team_member', label: 'Remove Team Member' },
+    { value: 'deactivate_user', label: 'Deactivate User' },
+    { value: 'remove_user', label: 'Remove User' },
+    { value: 'disable_user', label: 'Disable User' }
   ]
 };
 
@@ -131,9 +119,7 @@ export default function RevocationStepsSection({
                         </div>
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="remove_from_group">Remove from Group</SelectItem>
-                        <SelectItem value="remove_permission">Remove Permission</SelectItem>
-                        <SelectItem value="disable_account">Disable Account</SelectItem>
+                        <SelectItem value="api_call">API Call</SelectItem>
                       </SelectContent>
                     </Select>
                     

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Policy } from '../types/policy.types';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import PolicyCard from '@/components/policy/PolicyCard';
+import { PolicyCard } from '@/components/policy/PolicyCard';
 import { deletePolicy, fetchPolicies } from '@/lib/api';
 import { toast } from '@/components/ui/use-toast';
 import { Loader2 } from 'lucide-react';

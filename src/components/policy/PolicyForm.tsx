@@ -67,14 +67,26 @@ export default function PolicyForm({
   );
   const [provisioningSteps, setProvisioningSteps] = useState<ProvisioningStep[]>(
     initialData?.provisioningSteps || [
-      { id: generateUniqueId(), type: 'add_to_group', target: 'sales', provider: 'okta', description: 'Add user to Sales group in Okta' }
+      { 
+        id: generateUniqueId(), 
+        type: 'api_call', 
+        target: 'add_team_member', 
+        provider: 'github', 
+        description: 'Add user to organization team' 
+      }
     ]
   );
   
   // Add state for revocation steps
   const [revocationSteps, setRevocationSteps] = useState<RevocationStep[]>(
     initialData?.revocationSteps || [
-      { id: generateUniqueId(), type: 'remove_from_group', target: 'sales', provider: 'okta', description: 'Remove user from Sales group in Okta' }
+      { 
+        id: generateUniqueId(), 
+        type: 'api_call', 
+        target: 'remove_team_member', 
+        provider: 'github', 
+        description: 'Remove user from organization team' 
+      }
     ]
   );
 
@@ -198,7 +210,13 @@ export default function PolicyForm({
 
   const handleResetProvisioningSteps = () => {
     if (readOnly) return;
-    setProvisioningSteps([{ id: generateUniqueId(), type: 'add_to_group', target: 'sales', provider: 'okta', description: 'Add user to Sales group in Okta' }]);
+    setProvisioningSteps([{ 
+      id: generateUniqueId(), 
+      type: 'api_call', 
+      target: 'add_team_member', 
+      provider: 'github', 
+      description: 'Add user to organization team' 
+    }]);
   };
 
   const handleUpdateProvisioningStep = (index: number, field: keyof ProvisioningStep, value: string) => {
@@ -222,7 +240,13 @@ export default function PolicyForm({
 
   const handleResetRevocationSteps = () => {
     if (readOnly) return;
-    setRevocationSteps([{ id: generateUniqueId(), type: 'remove_from_group', target: 'sales', provider: 'okta', description: 'Remove user from Sales group in Okta' }]);
+    setRevocationSteps([{ 
+      id: generateUniqueId(), 
+      type: 'api_call', 
+      target: 'remove_team_member', 
+      provider: 'github', 
+      description: 'Remove user from organization team' 
+    }]);
   };
 
   const handleUpdateRevocationStep = (index: number, field: keyof RevocationStep, value: string) => {
